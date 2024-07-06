@@ -1,4 +1,5 @@
 import { Container } from '@mantine/core'
+import FileUpload from '@/components/misc/FileUpload'
 import Head from 'next/head'
 
 export default function Home() {
@@ -7,7 +8,10 @@ export default function Home() {
       <Head>
         <title>Home</title>
       </Head>
-      <Container size={1400}>Home</Container>
+      <Container size={1400}>
+        Hello
+        <FileUpload />
+      </Container>
     </>
   )
 }

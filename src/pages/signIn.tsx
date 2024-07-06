@@ -3,9 +3,8 @@ import { PasswordInput, Stack, Text, TextInput } from '@mantine/core'
 
 import AuthPage from '@/components/layout/AuthPage'
 import Head from 'next/head'
-import { api } from '@/utils/client'
-import { createNotification } from '@/utils/utils'
-import { useAuthStore } from '@/utils/authStore'
+import { api } from '@/client/trpc'
+import { createNotification } from '@/client/utils'
 import { useForm } from '@mantine/form'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -17,7 +16,6 @@ type SignInForm = {
 
 export default function SignIn() {
   const router = useRouter()
-  const { setIsAuthed } = useAuthStore()
   const [loading, setLoading] = useState(false)
   const { mutate: signIn } = api.auth.signIn.useMutation()
 
@@ -37,7 +35,6 @@ export default function SignIn() {
           setLoading(false)
           createNotification(data)
           if (!data.error) {
-            setIsAuthed(true)
             router.push('/')
           }
         },

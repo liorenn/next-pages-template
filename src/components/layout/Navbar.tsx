@@ -1,10 +1,9 @@
 import { Burger, Button, Group, rem } from '@mantine/core'
-import { CSSProperties, useEffect } from 'react'
 
+import { CSSProperties } from 'react'
 import NavMenu from './NavMenu'
-import { api } from '@/utils/client'
-import { createNotification } from '@/utils/utils'
-import { useAuthStore } from '@/utils/authStore'
+import { api } from '@/client/trpc'
+import { createNotification } from '@/client/utils'
 import { useDisclosure } from '@mantine/hooks'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -12,7 +11,6 @@ import { useState } from 'react'
 export default function Navbar() {
   const [loading, setLoading] = useState(false)
   const [opened, { toggle }] = useDisclosure(false)
-  const { isAuthed, setIsAuthed } = useAuthStore()
   const { mutate: signOutMutation } = api.auth.signOut.useMutation()
   const { data, isLoading } = api.auth.getUser.useQuery()
   const router = useRouter()
@@ -21,19 +19,12 @@ export default function Navbar() {
     setLoading(true)
     signOutMutation(undefined, {
       onSuccess(data) {
-        setIsAuthed(false)
         setLoading(false)
         createNotification(data)
         router.push('/')
       },
     })
   }
-
-  useEffect(() => {
-    if (data) {
-      setIsAuthed(true)
-    }
-  }, [data])
 
   return (
     <header style={headerStyle}>
@@ -47,7 +38,7 @@ export default function Navbar() {
         </Group>
         <Group>
           {!isLoading &&
-            (isAuthed ? (
+            (data ? (
               <Group>
                 <Button
                   loading={loading}

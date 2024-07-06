@@ -8,7 +8,7 @@ import type { AppProps } from 'next/app'
 import Layout from '@/components/layout/Layout'
 import { Notifications } from '@mantine/notifications'
 import RouterTransition from '@/components/layout/RouterTransition'
-import { api } from '@/utils/client'
+import { api } from '@/client/trpc'
 
 function App({ Component, pageProps }: AppProps) {
   return (

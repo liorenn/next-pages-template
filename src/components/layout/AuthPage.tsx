@@ -1,4 +1,4 @@
-import { api } from '@/utils/client'
+import { api } from '@/client/trpc'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 

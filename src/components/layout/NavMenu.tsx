@@ -1,8 +1,7 @@
 import { Button, Divider, Drawer, ScrollArea, Stack, rem } from '@mantine/core'
 import { useEffect, useState } from 'react'
 
-import { api } from '@/utils/client'
-import { useAuthStore } from '@/utils/authStore'
+import { api } from '@/client/trpc'
 import { useRouter } from 'next/router'
 
 type Props = {
@@ -13,14 +12,13 @@ type Props = {
 
 export default function NavMenu({ drawerOpened, closeDrawer, signOut }: Props) {
   const router = useRouter()
-  const { isAuthed } = useAuthStore()
   const { data, refetch } = api.auth.getUser.useQuery()
   const [activeLink, setActiveLink] = useState(router.asPath)
 
   useEffect(() => {
     refetch()
     setActiveLink(router.asPath)
-  }, [isAuthed, router])
+  }, [data, router])
 
   function getButtons() {
     const buttons = [{ title: 'Home', href: '/' }]

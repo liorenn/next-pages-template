@@ -19,7 +19,7 @@ prisma/migrations
 /build/
 /out/
 next-env.d.ts
-public/users
+public/uploads
 
 # production
 /build

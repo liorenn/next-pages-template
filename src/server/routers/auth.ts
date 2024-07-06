@@ -12,10 +12,9 @@ export const authRouter = createTRPCRouter({
   signUp: method
     .input(z.object({ email: z.string(), name: z.string(), password: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      console.log('hello')
       const user = await ctx.db.user.findUnique({ where: { email: input.email } })
       if (user) return { error: true, message: 'Email already exists', user: null }
-      console.log(user)
+
       const passwordHash = await hash(input.password, {
         memoryCost: 19456,
         timeCost: 2,

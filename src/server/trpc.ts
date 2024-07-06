@@ -1,6 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
-import superjson from 'superjson'
 import { ZodError } from 'zod'
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import { db } from '@/server/db'
@@ -30,13 +29,16 @@ export const createTRPCContext = (opts: CreateNextContextOptions) => {
 }
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
       ...shape,
       data: {
         ...shape.data,
-        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+        zodError:
+          error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
+            ? error.cause.flatten()
+            : null,
+        ...shape.data,
       },
     }
   },
