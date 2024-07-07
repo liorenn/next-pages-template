@@ -8,7 +8,7 @@ import { useDisclosure } from '@mantine/hooks'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 
-export default function Navbar() {
+export default function Header() {
   const [loading, setLoading] = useState(false)
   const [opened, { toggle }] = useDisclosure(false)
   const { mutate: signOutMutation } = api.auth.signOut.useMutation()
@@ -29,46 +29,54 @@ export default function Navbar() {
   return (
     <header style={headerStyle}>
       <div style={innerStyle}>
-        <Group gap='xs'>
+        <Group>
           <Burger opened={opened} onClick={toggle} size='sm' hiddenFrom='sm' />
           <NavMenu drawerOpened={opened} closeDrawer={toggle} signOut={signOut} />
           <Button variant='subtle' radius='lg' color='dark.1' onClick={() => router.push('/')}>
             Home
           </Button>
+          <Group visibleFrom='sm'>
+            <Button variant='subtle' radius='lg' color='dark.1' onClick={() => router.push('/')}>
+              Page
+            </Button>
+            <Button variant='subtle' radius='lg' color='dark.1' onClick={() => router.push('/')}>
+              Second Page
+            </Button>
+          </Group>
         </Group>
-        <Group>
-          {!isLoading &&
-            (data ? (
-              <Group>
-                <Button
-                  loading={loading}
-                  onClick={() => {
-                    signOut()
-                  }}
-                  variant='subtle'
-                  radius='lg'
-                  color='dark.1'>
-                  Sign Out
-                </Button>
-              </Group>
-            ) : (
-              <Group>
-                <Button
-                  variant='subtle'
-                  radius='lg'
-                  color='dark.1'
-                  onClick={() => router.push('/signIn')}>
-                  Sign In
-                </Button>
-                <Button
-                  variant='subtle'
-                  radius='lg'
-                  color='dark.1'
-                  onClick={() => router.push('/signUp')}>
-                  Sign Up
-                </Button>
-              </Group>
-            ))}
+
+        <Group visibleFrom={'xs'}>
+          {data ? (
+            <Group>
+              <Button
+                loading={loading}
+                onClick={() => {
+                  signOut()
+                }}
+                variant='subtle'
+                radius='lg'
+                color='dark.1'>
+                Sign Out
+              </Button>
+            </Group>
+          ) : (
+            <Group>
+              <Button
+                variant='subtle'
+                radius='lg'
+                color='dark.1'
+                onClick={() => router.push('/signIn')}>
+                Sign In
+              </Button>
+              <Button
+                variant='subtle'
+                radius='lg'
+                color='dark.1'
+                onClick={() => router.push('/signUp')}>
+                Sign Up
+              </Button>
+            </Group>
+          )}
         </Group>
       </div>
     </header>
