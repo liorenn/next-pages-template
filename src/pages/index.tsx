@@ -1,17 +1,9 @@
-import { Container } from '@mantine/core'
-import FileUpload from '@/components/misc/FileUpload'
-import Head from 'next/head'
+import Page from '@/components/pages/Page'
 
 export default function Home() {
   return (
-    <>
-      <Head>
-        <title>Home</title>
-      </Head>
-      <Container size={1400}>
-        Hello
-        <FileUpload />
-      </Container>
-    </>
+    <Page title='Home' container={1400}>
+      Hello
+    </Page>
   )
 }

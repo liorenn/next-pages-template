@@ -1,5 +1,5 @@
 import { MantineSize } from '@mantine/core'
-import Page from './Page'
+import Page from '@/components/pages/Page'
 import { api } from '@/client/trpc'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
@@ -15,14 +15,14 @@ export default function AdminPage({ children, title, container }: Props) {
   const { data, isLoading } = api.auth.getUser.useQuery()
 
   useEffect(() => {
-    if (data?.type !== 'admin') {
+    if (!isLoading && data?.type !== 'admin') {
       router.replace('/')
     }
-  }, [data, router])
+  }, [data, isLoading, router])
 
   return (
     <Page title={title} container={container}>
-      {!data && !isLoading ? children : null}
+      {!isLoading && data?.type === 'admin' ? children : null}
     </Page>
   )
 }

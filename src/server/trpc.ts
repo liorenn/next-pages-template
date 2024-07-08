@@ -45,23 +45,25 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 })
 
 const isAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.user) {
+  if (!ctx.user || !ctx.session) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sign in to access' })
   }
   return next({
     ctx: {
       user: ctx.user,
+      session: ctx.session,
     },
   })
 })
 
 const isAdmin = t.middleware(({ ctx, next }) => {
-  if (ctx.user?.type !== 'admin') {
+  if (ctx.user?.type !== 'admin' || !ctx.session) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Be an admin to access' })
   }
   return next({
     ctx: {
       user: ctx.user,
+      session: ctx.session,
     },
   })
 })

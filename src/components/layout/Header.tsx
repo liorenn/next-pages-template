@@ -1,7 +1,7 @@
 import { Burger, Button, Group, rem } from '@mantine/core'
 
 import { CSSProperties } from 'react'
-import NavMenu from './NavMenu'
+import NavMenu from '@/components/layout/NavMenu'
 import { api } from '@/client/trpc'
 import { createNotification } from '@/client/utils'
 import { useDisclosure } from '@mantine/hooks'
@@ -12,7 +12,7 @@ export default function Header() {
   const [loading, setLoading] = useState(false)
   const [opened, { toggle }] = useDisclosure(false)
   const { mutate: signOutMutation } = api.auth.signOut.useMutation()
-  const { data, isLoading } = api.auth.getUser.useQuery()
+  const { data } = api.auth.getUser.useQuery()
   const router = useRouter()
 
   function signOut() {
@@ -21,7 +21,6 @@ export default function Header() {
       onSuccess(data) {
         setLoading(false)
         createNotification(data)
-        router.push('/')
       },
     })
   }

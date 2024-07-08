@@ -1,7 +1,7 @@
 import { Container, MantineSize } from '@mantine/core'
 
 import Head from 'next/head'
-import Loader from '../layout/Loader'
+import Loader from '@/components/layout/Loader'
 import { Suspense } from 'react'
 
 type Props = {
