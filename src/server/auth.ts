@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { Lucia } from 'lucia'
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma'
-import { UserType } from '@prisma/client'
 import { db } from '@/server/db'
 
 const adapter = new PrismaAdapter(db.session, db.user)
@@ -17,7 +16,7 @@ export const lucia = new Lucia(adapter, {
     return {
       email: attributes.email,
       name: attributes.name,
-      type: attributes.type,
+      isAdmin: attributes.isAdmin,
     }
   },
 })
@@ -48,5 +47,5 @@ declare module 'lucia' {
 interface DatabaseUserAttributes {
   email: string
   name: string
-  type: UserType
+  isAdmin: boolean
 }

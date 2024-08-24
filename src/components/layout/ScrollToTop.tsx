@@ -1,16 +1,17 @@
 import { Affix, Button, Transition } from '@mantine/core'
-import { useOs, useWindowScroll } from '@mantine/hooks'
 
 import { IconArrowUp } from '@tabler/icons-react'
+import { useIsMobile } from '@/hooks/common'
+import { useWindowScroll } from '@mantine/hooks'
 
 export default function ScrollToTop() {
-  const os = useOs()
+  const isMobile = useIsMobile()
   const [scroll, scrollTo] = useWindowScroll()
 
   return (
     <>
-      {os !== 'ios' ? (
-        <Affix position={{ bottom: 20, right: 20 }}>
+      {!isMobile && (
+        <Affix position={{ bottom: 70, right: 10 }}>
           <Transition transition='slide-up' mounted={scroll.y > 100}>
             {(transitionStyles) => (
               <Button
@@ -24,8 +25,6 @@ export default function ScrollToTop() {
             )}
           </Transition>
         </Affix>
-      ) : (
-        ''
       )}
     </>
   )

@@ -26,11 +26,7 @@ export const api = createTRPCNext<AppRouter>({
     const url = `${getBaseUrl()}/api/trpc`
     return {
       links: [
-        // loggerLink({
-        //   enabled: (operation) =>
-        //     process.env.NODE_ENV === 'development' ||
-        //     (operation.direction === 'down' && operation.result instanceof Error),
-        // }),
+        // loggerLink(),
         splitLink({
           condition: (operation) => isNonJsonSerializable(operation.input),
           true: httpLink({

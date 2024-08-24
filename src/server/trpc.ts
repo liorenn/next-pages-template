@@ -44,8 +44,20 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   },
 })
 
+const isNotAuthed = t.middleware(({ ctx, next }) => {
+  if (ctx.session || ctx.user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sign in to access' })
+  }
+  return next({
+    ctx: {
+      user: ctx.user,
+      session: ctx.session,
+    },
+  })
+})
+
 const isAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.user || !ctx.session) {
+  if (!ctx.session || !ctx.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sign in to access' })
   }
   return next({
@@ -57,7 +69,7 @@ const isAuthed = t.middleware(({ ctx, next }) => {
 })
 
 const isAdmin = t.middleware(({ ctx, next }) => {
-  if (ctx.user?.type !== 'admin' || !ctx.session) {
+  if (!ctx.session || !ctx.user?.isAdmin) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Be an admin to access' })
   }
   return next({
@@ -74,6 +86,10 @@ export const createTRPCRouter = t.router
 
 export const method = t.procedure
 
+export const unAuthedMethod = t.procedure.use(isNotAuthed)
+
 export const protectedMethod = t.procedure.use(isAuthed)
 
 export const adminMethod = t.procedure.use(isAdmin)
+
+export type ContextType = Awaited<ReturnType<typeof createInnerTRPCContext>>

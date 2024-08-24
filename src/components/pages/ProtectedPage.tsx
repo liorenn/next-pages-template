@@ -1,6 +1,6 @@
 import { MantineSize } from '@mantine/core'
 import Page from '@/components/pages/Page'
-import { api } from '@/client/trpc'
+import { api } from '@/lib/trpc'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 

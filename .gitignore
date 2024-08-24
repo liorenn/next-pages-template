@@ -4,9 +4,12 @@
 /node_modules
 /.pnp
 .pnp.js
+bun.lockb
+pnpm-lock.yaml
 
 #prisma
 prisma/migrations
+prisma/*.db
 
 # testing
 /coverage
@@ -28,7 +31,6 @@ public/uploads
 .DS_Store
 *.pem
 .counter
-config.ts
 
 # debug
 npm-debug.log*

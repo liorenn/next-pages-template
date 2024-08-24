@@ -29,7 +29,6 @@ export const authRouter = createTRPCRouter({
           email: input.email,
           name: input.name,
           passwordHash: passwordHash,
-          type: 'user',
         },
       })
 

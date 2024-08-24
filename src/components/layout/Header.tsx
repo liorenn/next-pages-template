@@ -1,18 +1,26 @@
-import { Burger, Button, Group, rem } from '@mantine/core'
+import { Button, Group, Text, parseThemeColor, useMantineTheme } from '@mantine/core'
 
-import { CSSProperties } from 'react'
-import NavMenu from '@/components/layout/NavMenu'
-import { api } from '@/client/trpc'
-import { createNotification } from '@/client/utils'
-import { useDisclosure } from '@mantine/hooks'
+import { IconBrandAppleFilled } from '@tabler/icons-react'
+import SettingsPopover from '@/components/misc/SettingsPopover'
+import { api } from '@/lib/trpc'
+import { createNotification } from '@/lib/utils'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { useViewportSize } from '@mantine/hooks'
+
+export type Link = {
+  label: string
+  href?: string
+  loading?: boolean
+  onClick?: () => void
+}
 
 export default function Header() {
+  const { width } = useViewportSize()
   const [loading, setLoading] = useState(false)
-  const [opened, { toggle }] = useDisclosure(false)
   const { mutate: signOutMutation } = api.auth.signOut.useMutation()
   const { data } = api.auth.getUser.useQuery()
+  const theme = useMantineTheme()
   const router = useRouter()
 
   function signOut() {
@@ -25,77 +33,49 @@ export default function Header() {
     })
   }
 
+  function HeaderButton(link: Link) {
+    return (
+      <Button
+        visibleFrom='xs'
+        variant={width > 400 ? 'subtle' : 'light'}
+        radius='md'
+        color='dark.1'
+        onClick={link.onClick || (() => router.push(link.href ?? '/'))}
+        loading={link.loading}>
+        <Text fw='bold'>{link.label}</Text>
+      </Button>
+    )
+  }
+
   return (
-    <header style={headerStyle}>
-      <div style={innerStyle}>
-        <Group>
-          <Burger opened={opened} onClick={toggle} size='sm' hiddenFrom='sm' />
-          <NavMenu drawerOpened={opened} closeDrawer={toggle} signOut={signOut} />
-          <Button variant='subtle' radius='lg' color='dark.1' onClick={() => router.push('/')}>
-            Home
-          </Button>
-          <Group visibleFrom='sm'>
-            <Button variant='subtle' radius='lg' color='dark.1' onClick={() => router.push('/')}>
-              Page
-            </Button>
-            <Button variant='subtle' radius='lg' color='dark.1' onClick={() => router.push('/')}>
-              Second Page
-            </Button>
-          </Group>
+    <Group mx='md' h={56} align='center' justify='space-between'>
+      <Group>
+        <IconBrandAppleFilled
+          size={30}
+          color={
+            parseThemeColor({
+              color: theme.primaryColor,
+              theme,
+            }).value
+          }
+        />
+        <Group visibleFrom='sm'>
+          <HeaderButton href='/' label='Home' />
+          <HeaderButton href='/page1' label='Page 1' />
+          <HeaderButton href='/page2' label='Page 2' />
         </Group>
-
-        <Group visibleFrom={'xs'}>
-          {data ? (
-            <Group>
-              <Button
-                loading={loading}
-                onClick={() => {
-                  signOut()
-                }}
-                variant='subtle'
-                radius='lg'
-                color='dark.1'>
-                Sign Out
-              </Button>
-            </Group>
-          ) : (
-            <Group>
-              <Button
-                variant='subtle'
-                radius='lg'
-                color='dark.1'
-                onClick={() => router.push('/signIn')}>
-                Sign In
-              </Button>
-              <Button
-                variant='subtle'
-                radius='lg'
-                color='dark.1'
-                onClick={() => router.push('/signUp')}>
-                Sign Up
-              </Button>
-            </Group>
-          )}
-        </Group>
-      </div>
-    </header>
+      </Group>
+      <Group>
+        {data ? (
+          <HeaderButton label='Sign Out' loading={loading} onClick={signOut} />
+        ) : (
+          <>
+            <HeaderButton href='/signIn' label='Sign In' />
+            <HeaderButton href='/signUp' label='Sign Up' />
+          </>
+        )}
+        <SettingsPopover />
+      </Group>
+    </Group>
   )
-}
-
-const headerStyle: CSSProperties = {
-  height: rem(56),
-  marginBottom: rem(20),
-  backgroundColor: 'var(--mantine-color-body)',
-  borderBottom: `${rem(
-    1
-  )} solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))`,
-  paddingLeft: 'var(--mantine-spacing-md)',
-  paddingRight: 'var(--mantine-spacing-md)',
-}
-
-const innerStyle: CSSProperties = {
-  height: rem(56),
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
 }

@@ -7,6 +7,10 @@ import z from 'zod'
 import { zfd } from 'zod-form-data'
 
 export const dbRouter = createTRPCRouter({
+  hello: method.query(({ ctx }) => {
+    console.log(ctx.session)
+    return { message: 'Hello World' }
+  }),
   uploadFile: method
     .input(
       zfd.formData({

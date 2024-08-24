@@ -1,7 +1,7 @@
 import { Button, FileInput, Group, Image } from '@mantine/core'
 
-import { api } from '@/client/trpc'
-import { createNotification } from '@/client/utils'
+import { api } from '@/lib/trpc'
+import { createNotification } from '@/lib/utils'
 
 export default function FileUpload() {
   const mutation = api.db.uploadFile.useMutation({
@@ -23,7 +23,7 @@ export default function FileUpload() {
           e.preventDefault()
         }}>
         <Group>
-          <FileInput name='files' placeholder='Upload Your Files...' multiple />
+          <FileInput name='files' placeholder='Upload Your Files...' multiple w='200px' />
           <Button type='submit' loading={mutation.isPending} variant='default'>
             Upload
           </Button>
@@ -36,7 +36,7 @@ export default function FileUpload() {
             {mutation.data.files.map((file, index) => {
               const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif']
               if (allowedExtensions.some((ext) => file.name.includes(ext))) {
-                return <Image key={index} src={file.url} h={200} />
+                return <Image key={index} src={file.url} h={200} alt='Uploaded File' />
               }
             })}
           </Group>

@@ -3,14 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id           String    @id
   email        String    @unique
-  type         UserType
+  isAdmin      Boolean   @default(false)
   name         String
   passwordHash String
   sessions     Session[]
@@ -21,9 +21,4 @@ model Session {
   expiresAt DateTime
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-enum UserType {
-  user
-  admin
 }

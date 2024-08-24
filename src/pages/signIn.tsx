@@ -2,8 +2,8 @@ import { Anchor, Button, Group, Paper } from '@mantine/core'
 import { PasswordInput, Stack, Text, TextInput } from '@mantine/core'
 
 import AuthPage from '@/components/pages/AuthPage'
-import { api } from '@/client/trpc'
-import { createNotification } from '@/client/utils'
+import { api } from '@/lib/trpc'
+import { createNotification } from '@/lib/utils'
 import { useForm } from '@mantine/form'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -71,7 +71,7 @@ export default function SignIn() {
               type='button'
               onClick={() => router.push('signUp')}
               size='sm'>
-              Don't have an account? Register
+              Do not have an account? Register
             </Anchor>
             <Button color='dark.5' type='submit' radius='xl' loading={loading}>
               Sign In
