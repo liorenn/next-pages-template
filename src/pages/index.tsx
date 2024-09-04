@@ -1,13 +1,11 @@
-import { Button, Group, Image, List, Mark, SimpleGrid } from '@mantine/core'
-import { Stack, Text, ThemeIcon, Title, rem, useMantineTheme } from '@mantine/core'
+import { Button, Group, Image, List, SimpleGrid } from '@mantine/core'
+import { Stack, Text, ThemeIcon, Title, rem } from '@mantine/core'
 
 import { IconCheck } from '@tabler/icons-react'
 import Page from '@/components/pages/Page'
 import hero from '../../public/hero.svg'
 
 export default function Home() {
-  const theme = useMantineTheme()
-
   return (
     <Page title='Home' container='md'>
       <SimpleGrid
@@ -19,7 +17,7 @@ export default function Home() {
         }}>
         <Stack>
           <Title>
-            A <Mark color={theme.primaryColor}>modern</Mark> React <br /> components library
+            A modern React <br /> components library
           </Title>
           <Text c='dimmed' mt='md'>
             Build fully functional accessible web applications faster than ever - Mantine includes

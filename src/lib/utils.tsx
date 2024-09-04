@@ -18,11 +18,7 @@ export function createNotification(response: ActionResponse) {
   showNotification(response.message, response.error ? 'red' : 'green')
 }
 
-export function showNotification(
-  message: string,
-  color: 'red' | 'green' | 'yellow',
-  mobile?: boolean
-) {
+export function showNotification(message: string, color: 'red' | 'green' | 'yellow') {
   const icon = icons.find((i) => i.color === color)?.icon
 
   return showNotificationMantine({
@@ -32,7 +28,7 @@ export function showNotification(
     autoClose: 6000,
     radius: 'md',
     icon: icon,
-    style: { width: '60%', float: 'right', marginBottom: mobile ? '40px' : '' },
+    style: { width: '70%', float: 'right' },
   })
 }
 

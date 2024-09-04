@@ -1,5 +1,6 @@
 import { Button, Group, Text, parseThemeColor, useMantineTheme } from '@mantine/core'
 
+import AuthPopover from '../misc/AuthPopover'
 import { IconBrandAppleFilled } from '@tabler/icons-react'
 import SettingsPopover from '@/components/misc/SettingsPopover'
 import { api } from '@/lib/trpc'
@@ -75,6 +76,7 @@ export default function Header() {
           </>
         )}
         <SettingsPopover />
+        <AuthPopover />
       </Group>
     </Group>
   )

@@ -5,12 +5,12 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 type Props = {
-  children: React.ReactNode
-  title: string
-  container: number | MantineSize
+  children?: React.ReactNode
+  title?: string
+  container?: number | MantineSize
 }
 
-export default function ProtectedPage({ children, title, container }: Props) {
+export default function ProtectedPage({ children, title = 'Page', container = 'md' }: Props) {
   const router = useRouter()
   const { data, isLoading } = api.auth.getUser.useQuery()
 

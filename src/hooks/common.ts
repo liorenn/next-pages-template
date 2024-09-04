@@ -1,5 +1,7 @@
 import { useColorScheme, useOs, useViewportSize } from '@mantine/hooks'
 
+import { useMantineColorScheme } from '@mantine/core'
+
 export function useIsMobile() {
   const os = useOs()
   const { width } = useViewportSize()
@@ -7,6 +9,7 @@ export function useIsMobile() {
 }
 
 export function useIsDarkMode() {
-  const theme = useColorScheme()
-  return theme === 'dark'
+  const osColorScheme = useColorScheme()
+  const { colorScheme } = useMantineColorScheme()
+  return colorScheme === 'dark' || (colorScheme === 'auto' && osColorScheme === 'dark')
 }

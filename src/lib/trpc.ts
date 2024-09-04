@@ -26,7 +26,6 @@ export const api = createTRPCNext<AppRouter>({
     const url = `${getBaseUrl()}/api/trpc`
     return {
       links: [
-        // loggerLink(),
         splitLink({
           condition: (operation) => isNonJsonSerializable(operation.input),
           true: httpLink({

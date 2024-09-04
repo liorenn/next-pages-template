@@ -1,44 +1,78 @@
 import { IconCode, IconExternalLink, IconEye, IconHome } from '@tabler/icons-react'
-import { SegmentedControl, Stack, Text } from '@mantine/core'
+import { SegmentedControl, Stack, Text, parseThemeColor, useMantineTheme } from '@mantine/core'
+import { cloneElement, useEffect, useState } from 'react'
 
 import { useRouter } from 'next/router'
 
-const mobileButtons = [
-  { value: '', label: 'Home', icon: <IconHome size={16} /> },
-  { value: 'signIn', label: 'Page 1', icon: <IconEye size={16} /> },
-  { value: 'signUp', label: 'Page 2', icon: <IconCode size={16} /> },
-  { value: 'devices', label: 'Devices', icon: <IconExternalLink size={16} /> },
-]
+function getMobileButtons(color: string, value: string, size: number = 20) {
+  const buttons = [
+    { value: '', label: 'Home', icon: <IconHome size={size} /> },
+    { value: 'signIn', label: 'Page 1', icon: <IconEye size={size} /> },
+    { value: 'signUp', label: 'Page 2', icon: <IconCode size={size} /> },
+    { value: 'devices', label: 'Devices', icon: <IconExternalLink size={size} /> },
+  ]
+  return buttons.map((button) => {
+    if (button.value === value) {
+      return {
+        ...button,
+        icon: cloneElement(button.icon, { color }),
+      }
+    }
+    return button
+  })
+}
 
 export default function MobileNavigation() {
   const router = useRouter()
+  const theme = useMantineTheme()
+  const color = parseThemeColor({
+    color: theme.primaryColor,
+    theme,
+  }).value
+  const [value, setValue] = useState(
+    getMobileButtons(color, router.asPath.slice(1)).find(
+      (value) => router.asPath.slice(1) === value.value
+    )?.value
+  )
+
+  useEffect(() => {
+    setValue(
+      getMobileButtons(color, router.asPath.slice(1)).find(
+        (value) => router.asPath.slice(1) === value.value
+      )?.value
+    )
+  }, [router.asPath])
 
   return (
     <SegmentedControl
-      radius='md'
+      radius='sm'
       withItemsBorders={false}
-      defaultValue={mobileButtons.find((value) => router.asPath.slice(1) === value.value)?.value}
+      value={value}
       fullWidth
       onChange={(value) => {
+        setValue(value)
         router.push(`/${value}`)
       }}
-      p={5}
+      p={0}
       styles={{
-        label: {
-          padding: 0,
+        control: {
+          paddingBottom: 5,
+          backgroundColor: 'inherit',
         },
       }}
-      data={mobileButtons.map(({ value, label, icon }) => ({
-        value,
-        label: (
-          <Stack pt={5} gap={2} justify='center' align='center'>
-            {icon}
-            <Text fw='bold' size='xs'>
-              {label}
-            </Text>
-          </Stack>
-        ),
-      }))}
+      data={getMobileButtons(color, value ?? router.asPath.slice(1)).map(
+        ({ value: href, label, icon }) => ({
+          value: href,
+          label: (
+            <Stack pt={5} gap={4} justify='center' align='center'>
+              {icon}
+              <Text c={value === href ? color : 'inherit'} fw='bold' size='10px'>
+                {label}
+              </Text>
+            </Stack>
+          ),
+        })
+      )}
     />
   )
 }

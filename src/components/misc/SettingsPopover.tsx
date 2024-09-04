@@ -1,40 +1,40 @@
-import { ActionIcon, Center, ColorSwatch, Divider, Group, Popover } from '@mantine/core'
-import { IconBrush, IconSunMoon } from '@tabler/icons-react'
+import { ActionIcon, Button, Center, ColorSwatch, Divider, Group, Popover } from '@mantine/core'
+import { IconBrush, IconSettingsFilled, IconSunMoon } from '@tabler/icons-react'
 import { SegmentedControl, Slider, Stack, Text, useMantineColorScheme } from '@mantine/core'
-import { colors, themeOptions } from '@/config'
+import { colors, useThemeStore } from '@/hooks/useThemeStore'
 
 import HoverBox from '@/components/misc/HoverBox'
 import { capitilizeString } from '@/lib/utils'
-import { useThemeStore } from '@/hooks/useThemeStore'
+import { useIsDarkMode } from '@/hooks/common'
 import { useViewportSize } from '@mantine/hooks'
 
 export default function SettingsPopover() {
   const { width } = useViewportSize()
   const { setPrimaryColor, setScale, primaryColor, scale } = useThemeStore()
   const { setColorScheme, colorScheme } = useMantineColorScheme()
+  const dark = useIsDarkMode()
 
   return (
     <Group>
-      <Popover offset={10} shadow='md' width={260}>
+      <Popover offset={10} shadow='md' width={320}>
         <Popover.Target>
           <ActionIcon radius='md' size='lg' variant={width > 400 ? 'subtle' : 'light'}>
-            <IconBrush size={20} />
+            <IconSettingsFilled size={20} />
           </ActionIcon>
         </Popover.Target>
         <Popover.Dropdown p='sm'>
           <Stack gap='xs'>
             <Text>Change Color Scheme</Text>
             <SegmentedControl
-              transitionDuration={1000}
               fullWidth
               p={4}
-              data={themeOptions.map((key) => {
+              data={['dark', 'light', 'auto'].map((mode) => {
                 return {
-                  value: key,
+                  value: mode,
                   label: (
                     <Center style={{ gap: 4 }}>
                       <IconSunMoon size={16} />
-                      <Text size='sm'>{capitilizeString(key)}</Text>
+                      <Text size='sm'>{capitilizeString(mode)}</Text>
                     </Center>
                   ),
                 }
@@ -46,9 +46,18 @@ export default function SettingsPopover() {
             <Text>Change Color Theme</Text>
             <SegmentedControl
               bg='transparent'
-              value={primaryColor}
+              value={primaryColor.name}
               withItemsBorders={false}
-              onChange={setPrimaryColor}
+              onChange={(value) => {
+                setPrimaryColor(
+                  value === 'adaptive'
+                    ? { name: 'adaptive', color: dark ? 'white' : 'black' }
+                    : {
+                        name: value,
+                        color: colors.find((color) => color.name === value)?.color || 'blue',
+                      }
+                )
+              }}
               styles={{
                 root: {
                   gap: 12,
@@ -59,10 +68,10 @@ export default function SettingsPopover() {
               }}
               data={colors.map((color) => {
                 return {
-                  value: color,
+                  value: color.name,
                   label: (
-                    <HoverBox disabled={color === primaryColor}>
-                      <ColorSwatch size={30} color={`var(--mantine-color-${color}-5)`} />
+                    <HoverBox disabled={color.name === primaryColor.name}>
+                      <ColorSwatch size={30} color={`var(--mantine-color-${color.color}-7)`} />
                     </HoverBox>
                   ),
                 }
@@ -71,7 +80,7 @@ export default function SettingsPopover() {
             <Divider />
             <Text>Change Website Scaling</Text>
             <Slider
-              defaultValue={1}
+              value={scale}
               step={0.001}
               min={0.8}
               max={1.2}
@@ -83,6 +92,14 @@ export default function SettingsPopover() {
                 },
               }}
             />
+            <Button
+              fullWidth
+              variant='default'
+              onClick={() => {
+                setScale(1)
+              }}>
+              Restore To Default
+            </Button>
           </Stack>
         </Popover.Dropdown>
       </Popover>
